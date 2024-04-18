@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Create Note</title>
+    <style>
+        body {
+            background-image: url('https://mykaleidoscope.ru/x/uploads/posts/2022-10/1666206255_38-mykaleidoscope-ru-p-kartinka-na-zastavku-oboi-39.jpg');
+            background-size: cover;
+            background-position: center;
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+        }
+
+        .container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+
+        .create-note {
+            background-color: rgba(255, 255, 255, 0.8);
+            padding: 20px;
+            border-radius: 5px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            max-width: 400px;
+            width: 100%;
+        }
+
+        h1 {
+            text-align: center;
+            color: #333;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 10px;
+            color: #333;
+        }
+
+        input[type="text"],
+        textarea {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            resize: vertical;
+            box-sizing: border-box;
+        }
+
+        button {
+            display: block;
+            width: 100%;
+            padding: 10px;
+            margin-top: 10px;
+            background-color: #007bff;
+            color: #fff;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background-color: #0056b3;
+        }
+
+        /* Добавьте стили для изменения размера шрифта и начертания здесь */
+        #content {
+            font-size: 12px;
+            font-style: normal;
+        }
+        #title {
+            font-size: 12px;
+            font-style: normal;
+        }
+
+
+        #content.italic {
+            font-style: italic;
+        }
+        #title.italic {
+            font-style: italic;
+        }
+        #content.bold {
+            font-weight: bold;
+        }
+        #title.bold {
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <div class="create-note">
+        <h1>Создание заметки</h1>
+        <form action="#" th:action="@{/note/new}" th:object="${note}" method="post">
+            <label for="title">Название:</label>
+            <input type="text" id="title" th:field="*{title}" required>
+            <label for="content">Заметка:</label>
+            <textarea id="content" name="content" rows="5" required></textarea>
+            <label>Начертание:</label>
+            <label><input type="checkbox" id="boldCheckbox" onchange="updateBoldValue()"> Жирный</label>
+            <label><input type="checkbox" id="italicCheckbox" onchange="updateItalicValue()"> Курсив</label>
+            <input type="hidden" id="isBold" th:field="*{isBold}">
+            <input type="hidden" id="isItalic" th:field="*{isItalic}">
+            <label for="fontSize">Размер шрифта:</label>
+            <input type="number" id="fontSize" name="fontSize" value="12" onchange="changeFontSize()">
+
+            <button type="submit">Создать</button>
+            <a href="/" class="ui-button">Назад</a>
+        </form>
+
+        <script>
+            // Получить редактируемую область, радиокнопки начертания и элемент для ввода размера шрифта
+            const contentArea = document.getElementById('content');
+            const titleArea = document.getElementById('title');
+            const fontStyleRadios = document.getElementsByName('fontStyle');
+            const fontSizeInput = document.getElementById('fontSize');
+            const boldCheckbox = document.getElementById('boldCheckbox');
+            const italicCheckbox = document.getElementById('italicCheckbox');
+            boldCheckbox.addEventListener('change', function() {
+                if (this.checked) {
+                    contentArea.classList.add('bold');
+                    titleArea.classList.add('bold');
+                } else {
+                    contentArea.classList.remove('bold');
+                    titleArea.classList.remove('bold');
+                }
+            });
+            italicCheckbox.addEventListener('change', function() {
+                if (this.checked) {
+                    contentArea.classList.add('italic');
+                    titleArea.classList.add('italic');
+                } else {
+                    contentArea.classList.remove('italic');
+                    titleArea.classList.remove('italic');
+                }
+            });
+
+            // Функция для изменения размера шрифта
+            function changeFontSize() {
+                contentArea.style.fontSize = fontSizeInput.value + 'px';
+                titleArea.style.fontSize = fontSizeInput.value + 'px';
+            }
+
+            // Функция для изменения начертания
+            function changeFontStyle(style) {
+                contentArea.className = style;
+                titleArea.className = style;
+            }
+            function updateBoldValue() {
+                const boldCheckbox = document.getElementById('boldCheckbox');
+                const isBoldInput = document.getElementById('isBold');
+                isBoldInput.value = boldCheckbox.checked ? "true" : "false";
+            }
+
+            function updateItalicValue() {
+                const italicCheckbox = document.getElementById('italicCheckbox');
+                const isItalicInput = document.getElementById('isItalic');
+                isItalicInput.value = italicCheckbox.checked ? "true" : "false";
+            }
+        </script>
+    </div>
+</div>
+</body>
+</html>
